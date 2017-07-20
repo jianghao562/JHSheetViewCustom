@@ -1,6 +1,5 @@
-# JHSheetViewCustom
-仿微信，一款相当实用的控件！
-#集成使用
+#仿微信，一款相当实用的控件！
+
 先导入项目工程并实现sheet协议
 ```
  #import "JHSheetActionView.h"
@@ -24,4 +23,4 @@
     
 }
 `````
-![dust mite](https://github.com/jianghao562/JHSheetViewCustom/blob/master/GifFile/55555.gif)
+![image](https://github.com/jianghao562/JHSheetViewCustom/blob/master/GifFile/55555.gif)
