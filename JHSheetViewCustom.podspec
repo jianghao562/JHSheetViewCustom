@@ -1,4 +1,3 @@
-
 d::Spec.new do |s|
 	  s.name         = "JHSheetViewCustom"
 	  s.version      = "1.0.0"
