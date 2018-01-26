@@ -1,4 +1,9 @@
 #仿微信，一款相当实用的控件！</br>
+引入pod
+、、、
+pod 'JHSheetActionView'
+、、、
+
 先导入项目工程并实现sheet协议
 ```
  #import "JHSheetActionView.h"
