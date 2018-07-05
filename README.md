@@ -7,7 +7,7 @@ pod 'JHSheetActionView'
 1.使用block
 ```
  JHSheetActionView *sheetView= [[JHSheetActionView alloc] init];
-    sheetView.sheetItems=@[@[@"标题1",@"标题2"],@[@"取消"]];
+    sheetView.sheetItems=@[@[@"标题1",@"标题2,@"标题3"],@[@"取消"]];
      sheetView.callBackCellForRowIndex = ^(NSInteger index) {
       NSLog(@"选择了第%zd个item",index);
     };
