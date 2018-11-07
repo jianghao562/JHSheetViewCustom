@@ -18,6 +18,8 @@
 @interface JHSheetActionView ()<UIGestureRecognizerDelegate,UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,weak)UIView * parentView;
 @property(nonatomic,weak)UITableView * tableView;
+@property(nonatomic,assign)CGFloat tabH;
+@property(nonatomic,assign)BOOL isflag;
 @end
 
 @implementation JHSheetActionView
@@ -59,7 +61,6 @@
     tableView.dataSource=self;
     tableView.delegate=self;
     tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    tableView.rowHeight=cellHeight;
     tableView.backgroundColor=_markViewColor?_markViewColor:RGB(146, 149, 206);
     self.tableView=tableView;
     [parentView addSubview:tableView];
@@ -68,11 +69,16 @@
         make.bottom.equalTo(vw.mas_top);
         make.height.mas_equalTo(parentViewH);
     }];
+    [tableView registerClass:[JHSheetCell class] forCellReuseIdentifier:@"JHSheetCell"];
+    
+    
     
 }
 //展示蒙板
 -(void)showView
 {
+    _tabH=sectionMargin;
+    _isflag=YES;
     [self loadSubViews];
     self.backgroundColor=[UIColor colorWithWhite:0.f alpha:0.5];
     UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeMark)];
@@ -81,10 +87,10 @@
     [self layoutIfNeeded];
     
     [UIView animateWithDuration:0.4 animations:^{
-        
         self.parentView.transform=CGAffineTransformMakeTranslation(0, -self.parentView.frame.size.height);
         
     }];
+    
     
 }
 
@@ -128,21 +134,22 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  
-    JHSheetCell *cell=[[JHSheetCell alloc] init];
+    
+    JHSheetCell *cell=[tableView dequeueReusableCellWithIdentifier:@"JHSheetCell"];
     if (indexPath.row==[_sheetItems[indexPath.section] count]-1){
         cell.isHideLine=YES;
     }
     else {
-       cell.isHideLine=NO;
+        cell.isHideLine=NO;
         cell.divColor=_divColor;
     }
     cell.titleText=_sheetItems[indexPath.section][indexPath.row];
+    cell.labelView.font=_font;
+    cell.labelView.textColor=_textColor;
     cell.backgroundColor=_bgViewColor?_bgViewColor:[UIColor whiteColor];
     if (indexPath.section==1) {
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
     }
-    
     return cell;
 }
 
@@ -151,17 +158,15 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if (indexPath.section==0){
         if ([_delegate respondsToSelector:@selector(didSelectCellForRowIndex:)]) {
-             [_delegate didSelectCellForRowIndex:indexPath.row+1];
+            [_delegate didSelectCellForRowIndex:indexPath.row+1];
         }
         if (_callBackCellForRowIndex) {
             _callBackCellForRowIndex(indexPath.row+1);
         }
-
+        
     }
     //退出蒙版
     [self closeMark];
-    
-   
     
     
 }
@@ -179,12 +184,31 @@
     return 0.1f;
     
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    JHSheetCell *cell=[tableView dequeueReusableCellWithIdentifier:@"JHSheetCell"];
+    cell.titleText=_sheetItems[indexPath.section][indexPath.row];
+    self.tabH+=cell.cellH;
+    if (indexPath.section==1&&_isflag) {
+        [self.parentView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.tabH);
+        }];
+        [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.tabH);
+        }];
+        _isflag=NO;
+        NSLog(@"%@==cellH=%lf",cell.titleText,cell.cellH);
+    }
+    //    NSLog(@"cellH=%lf",cell.cellH);
+    return cell.cellH;
+}
+
 @end
 
 #pragma mark - JHSheetCell
 
 @interface JHSheetCell()
-@property(weak,nonatomic)UILabel *labelView;
 @end
 
 @implementation JHSheetCell
@@ -195,8 +219,11 @@
         
         UILabel *labelView=[[UILabel alloc] init];
         _labelView=labelView;
+        labelView.preferredMaxLayoutWidth=[UIScreen mainScreen].bounds.size.width-30;
+        labelView.numberOfLines=0;
         labelView.font=kFont;
         labelView.textColor=[UIColor blackColor];
+        labelView.textAlignment=NSTextAlignmentCenter;
         [self.contentView addSubview:_labelView];
         [_labelView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self);
@@ -213,6 +240,9 @@
 {
     _titleText=titleText;
     self.labelView.text=titleText;
+    [self.contentView layoutIfNeeded];
+    CGFloat cellH=CGRectGetMaxY(self.labelView.frame)+20;
+    _cellH=cellH;
     
 }
 
@@ -227,10 +257,10 @@
     CGContextAddRect(context,CGRectMake(0, rect.size.height-0.5, rect.size.width,0.5));
     CGContextStrokePath(context);
     
-    
 }
 
 @end
+
 
 
 
