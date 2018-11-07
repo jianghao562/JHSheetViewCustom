@@ -144,7 +144,7 @@
         cell.divColor=_divColor;
     }
     cell.titleText=_sheetItems[indexPath.section][indexPath.row];
-    cell.labelView.font=_font;
+    cell.labelView.font=_textfont;
     cell.labelView.textColor=_textColor;
     cell.backgroundColor=_bgViewColor?_bgViewColor:[UIColor whiteColor];
     if (indexPath.section==1) {
@@ -198,9 +198,9 @@
             make.height.mas_equalTo(self.tabH);
         }];
         _isflag=NO;
-        NSLog(@"%@==cellH=%lf",cell.titleText,cell.cellH);
+       
     }
-    //    NSLog(@"cellH=%lf",cell.cellH);
+    
     return cell.cellH;
 }
 

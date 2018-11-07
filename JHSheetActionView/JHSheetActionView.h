@@ -16,7 +16,7 @@
 @interface JHSheetActionView : UIView
 @property(strong,nonatomic)NSArray *sheetItems;//添加列表内容
 @property(strong,nonatomic)UIColor *textColor;//字体颜色
-@property(strong,nonatomic)UIFont *font;//字体大小
+@property(strong,nonatomic)UIFont * textfont;//字体大小
 @property(strong,nonatomic)UIColor *markViewColor;//取消顶部的mark颜色
 @property(strong,nonatomic)UIColor *bgViewColor;//每条列表的背景色
 @property(strong,nonatomic)UIColor * divColor;//分割线颜色
